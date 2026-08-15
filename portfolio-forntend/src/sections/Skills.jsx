@@ -1,16 +1,5 @@
 import { useEffect, useRef } from 'react'
-
-const skillsLeft = [
-  { name: 'HTML', val: 100 },
-  { name: 'CSS', val: 90 },
-  { name: 'JavaScript', val: 75 },
-]
-
-const skillsRight = [
-  { name: 'PHP', val: 80 },
-  { name: 'WordPress/CMS', val: 90 },
-  { name: 'Photoshop', val: 55 },
-]
+import { useContent } from '../admin/context/ContentContext'
 
 function SkillBar({ name, val }) {
   return (
@@ -25,6 +14,7 @@ function SkillBar({ name, val }) {
           aria-valuenow={val}
           aria-valuemin="0"
           aria-valuemax="100"
+          style={{ width: `${val}%` }}
         ></div>
       </div>
     </div>
@@ -32,26 +22,21 @@ function SkillBar({ name, val }) {
 }
 
 export default function Skills() {
+  const { content } = useContent()
   const sectionRef = useRef(null)
-  const animated = useRef(false)
+
+  const activeSkills = (content?.skills || []).filter(s => s.visible !== false)
+  const half = Math.ceil(activeSkills.length / 2)
+  const skillsLeft = activeSkills.slice(0, half)
+  const skillsRight = activeSkills.slice(half)
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && !animated.current) {
-          animated.current = true
-          const bars = document.querySelectorAll('.skills .progress-bar')
-          bars.forEach((bar) => {
-            const val = bar.getAttribute('aria-valuenow')
-            bar.style.width = `${val}%`
-          })
-        }
-      },
-      { threshold: 0.3 }
-    )
-    if (sectionRef.current) observer.observe(sectionRef.current)
-    return () => observer.disconnect()
-  }, [])
+    const bars = document.querySelectorAll('.skills .progress-bar')
+    bars.forEach((bar) => {
+      const val = bar.getAttribute('aria-valuenow')
+      bar.style.width = `${val}%`
+    })
+  }, [activeSkills])
 
   return (
     <section id="skills" className="skills section light-background" ref={sectionRef}>
@@ -63,14 +48,14 @@ export default function Skills() {
 
       <div className="container" data-aos="fade-up" data-aos-delay="100">
         <div className="row skills-content skills-animation">
-          <div className="col-lg-6">
+          <div className="col-12 col-lg-6">
             {skillsLeft.map((s) => (
-              <SkillBar key={s.name} {...s} />
+              <SkillBar key={s.id || s.name} name={s.name} val={s.percentage} />
             ))}
           </div>
-          <div className="col-lg-6">
+          <div className="col-12 col-lg-6">
             {skillsRight.map((s) => (
-              <SkillBar key={s.name} {...s} />
+              <SkillBar key={s.id || s.name} name={s.name} val={s.percentage} />
             ))}
           </div>
         </div>

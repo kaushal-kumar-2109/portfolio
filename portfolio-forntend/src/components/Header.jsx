@@ -1,20 +1,26 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { useContent } from '../admin/context/ContentContext'
 
 const navLinks = [
-  { href: '#hero',      icon: 'bi-house',            label: 'Home' },
-  { href: '#about',     icon: 'bi-person',           label: 'About' },
-  { href: '#resume',    icon: 'bi-file-earmark-text', label: 'Resume' },
-  { href: '#portfolio', icon: 'bi-images',           label: 'Portfolio' },
-  { href: '#services',  icon: 'bi-hdd-stack',        label: 'Services' },
-  { href: '#contact',   icon: 'bi-envelope',         label: 'Contact' },
+  { href: '#hero',      icon: 'bi-house',            label: 'Home',      key: 'hero' },
+  { href: '#about',     icon: 'bi-person',           label: 'About',     key: 'about' },
+  { href: '#resume',    icon: 'bi-file-earmark-text', label: 'Resume',    key: 'resume' },
+  { href: '#portfolio', icon: 'bi-images',           label: 'Portfolio', key: 'portfolio' },
+  { href: '#services',  icon: 'bi-hdd-stack',        label: 'Services',  key: 'services' },
+  { href: '#contact',   icon: 'bi-envelope',         label: 'Contact',   key: 'contact' },
 ]
 
 export default function Header() {
+  const { content } = useContent()
   const [isOpen, setIsOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('hero')
   const location = useLocation()
   const isMobile = () => window.innerWidth < 1200
+
+  const hero = content?.hero || {}
+  const profileImg = hero.profileImage || '/assets/img/my-profile-img.jpg'
+  const sitename = hero.name || 'Alex Smith'
 
   // Lock body scroll when mobile sidebar is open
   useEffect(() => {
@@ -48,9 +54,7 @@ export default function Header() {
       e.preventDefault()
       const target = document.querySelector(href)
       if (target) {
-        // Account for the mobile toggle button height on mobile
-        const offset = isMobile() ? 0 : 0
-        const top = target.getBoundingClientRect().top + window.scrollY - offset
+        const top = target.getBoundingClientRect().top + window.scrollY
         window.scrollTo({ top, behavior: 'smooth' })
       }
     }
@@ -73,7 +77,7 @@ export default function Header() {
       },
       {
         threshold: 0,
-        rootMargin: '-30% 0px -60% 0px', // Trigger when section is ~30% from top
+        rootMargin: '-30% 0px -60% 0px',
       }
     )
 
@@ -113,7 +117,7 @@ export default function Header() {
         <i className={`bi ${isOpen ? 'bi-x' : 'bi-list'}`}></i>
       </button>
 
-      {/* Backdrop overlay — mobile only, click to close */}
+      {/* Backdrop overlay */}
       {isOpen && (
         <div
           onClick={closeSidebar}
@@ -135,8 +139,8 @@ export default function Header() {
       >
         <div className="profile-img">
           <img
-            src="/assets/img/my-profile-img.jpg"
-            alt="Alex Smith profile"
+            src={profileImg}
+            alt={`${sitename} profile`}
             className="img-fluid rounded-circle"
           />
         </div>
@@ -146,21 +150,35 @@ export default function Header() {
           className="logo d-flex align-items-center justify-content-center"
           onClick={() => isMobile() && closeSidebar()}
         >
-          <h1 className="sitename">Alex Smith</h1>
+          <h1 className="sitename">{sitename}</h1>
         </Link>
 
         <div className="social-links text-center">
-          {[
-            { cls: 'twitter',    icon: 'bi-twitter-x',  label: 'Twitter' },
-            { cls: 'facebook',   icon: 'bi-facebook',   label: 'Facebook' },
-            { cls: 'instagram',  icon: 'bi-instagram',  label: 'Instagram' },
-            { cls: 'google-plus',icon: 'bi-skype',      label: 'Skype' },
-            { cls: 'linkedin',   icon: 'bi-linkedin',   label: 'LinkedIn' },
-          ].map(s => (
-            <a key={s.cls} href="#" className={s.cls} aria-label={s.label}>
-              <i className={`bi ${s.icon}`}></i>
+          {hero.socialLinks?.twitter && (
+            <a href={hero.socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="twitter" aria-label="Twitter">
+              <i className="bi bi-twitter-x"></i>
             </a>
-          ))}
+          )}
+          {hero.socialLinks?.facebook && (
+            <a href={hero.socialLinks.facebook} target="_blank" rel="noopener noreferrer" className="facebook" aria-label="Facebook">
+              <i className="bi bi-facebook"></i>
+            </a>
+          )}
+          {hero.socialLinks?.instagram && (
+            <a href={hero.socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="instagram" aria-label="Instagram">
+              <i className="bi bi-instagram"></i>
+            </a>
+          )}
+          {hero.socialLinks?.linkedin && (
+            <a href={hero.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="linkedin" aria-label="LinkedIn">
+              <i className="bi bi-linkedin"></i>
+            </a>
+          )}
+          {hero.socialLinks?.github && (
+            <a href={hero.socialLinks.github} target="_blank" rel="noopener noreferrer" className="github" aria-label="GitHub">
+              <i className="bi bi-github"></i>
+            </a>
+          )}
         </div>
 
         <nav id="navmenu" className="navmenu" aria-label="Main navigation">
@@ -174,7 +192,7 @@ export default function Header() {
                     href={isHomePage ? link.href : `/${link.href}`}
                     className={isActive ? 'active' : ''}
                     onClick={(e) => handleNavClick(e, link.href)}
-                    style={{ minHeight: '44px' }} /* Touch-friendly tap area */
+                    style={{ minHeight: '44px' }}
                   >
                     <i className={`bi ${link.icon} navicon`}></i>
                     {link.label}

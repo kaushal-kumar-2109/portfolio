@@ -1,4 +1,8 @@
+// ------------------------------ requireing the packages ------------------------------
+// configuration 
 require("dotenv").config();
+require("./config/db.config.js");
+// packages
 const express = require("express");
 const cors = require("cors");
 
@@ -10,7 +14,6 @@ const webStatus = process.env.WEB_STATUS;
 const backendHostUrl = process.env.BACKEND_HOST_URL;
 const app = express();
 
-console.log(webStatus === 'local');
 
 // ------------------------------ middleware ------------------------------
 app.use(express.json());

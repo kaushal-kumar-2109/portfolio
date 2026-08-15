@@ -1,64 +1,71 @@
+import { useContent } from '../admin/context/ContentContext'
+
 export default function About() {
+  const { content } = useContent()
+  const aboutData = content?.about || {}
+
   return (
     <section id="about" className="about section">
-
       {/* Section Title */}
       <div className="container section-title" data-aos="fade-up">
-        <h2>About</h2>
-        <p>
-          Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint
-          consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit
-          in iste officiis commodi quidem hic quas.
-        </p>
+        <h2>{aboutData.title || 'About'}</h2>
+        <p>{aboutData.description}</p>
       </div>
 
       <div className="container" data-aos="fade-up" data-aos-delay="100">
         <div className="row gy-4 justify-content-center align-items-start">
-
-          {/* Profile image — full-width on mobile, 4 cols on desktop */}
+          {/* Profile image */}
           <div className="col-12 col-lg-4 text-center">
             <img
-              src="/assets/img/my-profile-img.jpg"
+              src={aboutData.profileImage || '/assets/img/my-profile-img.jpg'}
               className="img-fluid rounded"
-              alt="Alex Smith"
+              alt={content.hero?.name || 'Alex Smith'}
               style={{ maxWidth: '260px', width: '100%', margin: '0 auto' }}
             />
           </div>
 
-          {/* Content — full-width on mobile, 8 cols on desktop */}
+          {/* Content */}
           <div className="col-12 col-lg-8 content">
-            <h2>UI/UX Designer &amp; Web Developer.</h2>
+            <h2>{aboutData.subtitle || 'UI/UX Designer & Web Developer.'}</h2>
             <p className="fst-italic py-3">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua.
+              {aboutData.bioText || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'}
             </p>
 
             <div className="row">
               <div className="col-12 col-sm-6">
                 <ul>
-                  <li><i className="bi bi-chevron-right"></i> <strong>Birthday:</strong> <span>1 May 1995</span></li>
-                  <li><i className="bi bi-chevron-right"></i> <strong>Website:</strong> <span>www.example.com</span></li>
-                  <li><i className="bi bi-chevron-right"></i> <strong>Phone:</strong> <span>+123 456 7890</span></li>
-                  <li><i className="bi bi-chevron-right"></i> <strong>City:</strong> <span>New York, USA</span></li>
+                  {aboutData.birthday && (
+                    <li><i className="bi bi-chevron-right"></i> <strong>Birthday:</strong> <span>{aboutData.birthday}</span></li>
+                  )}
+                  {aboutData.website && (
+                    <li><i className="bi bi-chevron-right"></i> <strong>Website:</strong> <span>{aboutData.website}</span></li>
+                  )}
+                  {aboutData.phone && (
+                    <li><i className="bi bi-chevron-right"></i> <strong>Phone:</strong> <span>{aboutData.phone}</span></li>
+                  )}
+                  {aboutData.city && (
+                    <li><i className="bi bi-chevron-right"></i> <strong>City:</strong> <span>{aboutData.city}</span></li>
+                  )}
                 </ul>
               </div>
               <div className="col-12 col-sm-6">
                 <ul>
-                  <li><i className="bi bi-chevron-right"></i> <strong>Age:</strong> <span>30</span></li>
-                  <li><i className="bi bi-chevron-right"></i> <strong>Degree:</strong> <span>Master</span></li>
-                  <li><i className="bi bi-chevron-right"></i> <strong>Email:</strong> <span>email@example.com</span></li>
-                  <li><i className="bi bi-chevron-right"></i> <strong>Freelance:</strong> <span>Available</span></li>
+                  {aboutData.age && (
+                    <li><i className="bi bi-chevron-right"></i> <strong>Age:</strong> <span>{aboutData.age}</span></li>
+                  )}
+                  {aboutData.degree && (
+                    <li><i className="bi bi-chevron-right"></i> <strong>Degree:</strong> <span>{aboutData.degree}</span></li>
+                  )}
+                  {aboutData.email && (
+                    <li><i className="bi bi-chevron-right"></i> <strong>Email:</strong> <span>{aboutData.email}</span></li>
+                  )}
+                  {aboutData.freelance && (
+                    <li><i className="bi bi-chevron-right"></i> <strong>Freelance:</strong> <span>{aboutData.freelance}</span></li>
+                  )}
                 </ul>
               </div>
             </div>
-
-            <p className="py-3">
-              Officiis eligendi itaque labore et dolorum mollitia officiis optio vero. Quisquam sunt adipisci omnis et
-              ut. Nulla accusantium dolor incidunt officia tempore. Et eius omnis. Cupiditate ut dicta maxime officiis
-              quidem quia. Sed et consectetur qui quia repellendus itaque neque.
-            </p>
           </div>
-
         </div>
       </div>
     </section>
