@@ -1,0 +1,26 @@
+{
+  "name": "portfolio backend",
+  "version": "3`.0.0",
+  "description": "this is my portfolio",
+  "keywords": [
+    "kishor"
+  ],
+  "license": "ISC",
+  "author": "kishor",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongoose": "^9.9.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

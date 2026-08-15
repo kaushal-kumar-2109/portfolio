@@ -1,0 +1,4 @@
+/* Minimal reset - main styles in src/styles/main.css */
+* {
+  box-sizing: border-box;
+}
