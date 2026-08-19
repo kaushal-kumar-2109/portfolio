@@ -1,11 +1,33 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import '../styles/admin.css'
+import { handleAdminLogin } from '../api/handlers/adminHandler'
+import { ERROR, INFO, SUCCESS } from '../../utils/toastNotify';
 
 export default function LoginPage() {
   const { login, isAuthenticated, loading } = useAuth()
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const ADMIN_BG = '#0a0a12';
+    const prevBodyBg = document.body.style.backgroundColor;
+    const prevHtmlBg = document.documentElement.style.backgroundColor;
+
+    document.body.classList.add('admin-body');
+    document.body.style.backgroundColor = ADMIN_BG;
+    document.body.style.background = ADMIN_BG;
+    document.documentElement.style.backgroundColor = ADMIN_BG;
+    document.documentElement.style.background = ADMIN_BG;
+
+    return () => {
+      document.body.classList.remove('admin-body');
+      document.body.style.backgroundColor = prevBodyBg;
+      document.body.style.background = prevBodyBg;
+      document.documentElement.style.backgroundColor = prevHtmlBg;
+      document.documentElement.style.background = prevHtmlBg;
+    };
+  }, []);
 
   const [form, setForm] = useState({ username: '', password: '' })
   const [showPass, setShowPass] = useState(false)
@@ -18,7 +40,7 @@ export default function LoginPage() {
   const validate = () => {
     const e = {}
     if (!form.username.trim()) e.username = 'Username is required'
-    if (!form.password)         e.password = 'Password is required'
+    if (!form.password) e.password = 'Password is required'
     if (form.password && form.password.length < 4) e.password = 'Password too short'
     setErrors(e)
     return Object.keys(e).length === 0
@@ -27,14 +49,23 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setApiError(null)
+
     if (!validate()) return
 
-    const result = await login(form.username.trim(), form.password)
-    if (result.ok) {
-      setSuccess(true)
-      setTimeout(() => navigate('/admin/dashboard'), 600)
+    const result = await handleAdminLogin({ username: form.username.trim(), password: form.password });
+
+    if (result.status != 200) {
+      if (result.status == 500) {
+        ERROR(result.message);
+      } else {
+        INFO(result.message);
+        return;
+      }
+      setApiError(result.message)
+      setTimeout(() => setApiError(null), 2000);
     } else {
-      setApiError(result.error)
+      SUCCESS(result.message);
+      setTimeout(() => navigate('/admin/dashboard'), 600);
     }
   }
 

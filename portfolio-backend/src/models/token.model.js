@@ -1,6 +1,12 @@
 const mongoose = require("mongoose");
 
 const tokenSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "AdminSchema",
+        required: true,
+    },
+
     token: {
         type: String,
         required: true,

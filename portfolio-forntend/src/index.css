@@ -2,3 +2,7 @@
 * {
   box-sizing: border-box;
 }
+
+.Toastify {
+  padding: 0px !important;
+}

@@ -5,6 +5,7 @@ require("./config/db.config.js");
 // packages
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 
 
 // ------------------------------ initializing the app variables ------------------------------
@@ -19,9 +20,10 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
-    origin: [`http://localhost:${port}`, ""],
+    origin: [`http://192.168.1.18:5173`, "http://localhost:5173", "http://localhost:5175"],
     credentials: true
 }));
+app.use(cookieParser());
 
 
 // ------------------------------ requiring all routers from routes folder ------------------------------
